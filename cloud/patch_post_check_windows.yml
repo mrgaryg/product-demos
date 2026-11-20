@@ -1,6 +1,6 @@
 ---
 - name: Post-check patch verification - Windows
-  hosts: "{{ _hosts_windows | default('aws-dc:aws_win1') }}"
+  hosts: "{{ _hosts_windows | default('aws-dc') }}"
   gather_facts: false
 
   vars:

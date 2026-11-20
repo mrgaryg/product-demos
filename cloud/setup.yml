@@ -148,7 +148,7 @@ controller_templates:
     notification_templates_error: Telemetry
     extra_vars:
       _hosts: aws-rhel9:aws-rhel10
-      _hosts_windows: aws-dc:aws_win1
+      _hosts_windows: aws-dc
     limit: all
     survey_enabled: true
     survey:
@@ -174,7 +174,7 @@ controller_templates:
           type: text
           variable: _hosts_windows
           required: false
-          default: aws-dc:aws_win1
+          default: aws-dc
 
   - name: Cloud | AWS | Restore EC2 from Snapshot
     labels:
@@ -191,7 +191,7 @@ controller_templates:
     notification_templates_error: Telemetry
     extra_vars:
       _hosts: aws-rhel9:aws-rhel10
-      _hosts_windows: aws-dc:aws_win1
+      _hosts_windows: aws-dc
     limit: all
     survey_enabled: true
     survey:
@@ -217,7 +217,7 @@ controller_templates:
           type: text
           variable: _hosts_windows
           required: false
-          default: aws-dc:aws_win1
+          default: aws-dc
 
   - name: Cloud | AWS | Display EC2 Stats
     labels:
@@ -432,7 +432,7 @@ controller_templates:
     use_fact_cache: true
     extra_vars:
       _hosts: aws-rhel9:aws-rhel10
-      _hosts_windows: aws-dc:aws_win1
+      _hosts_windows: aws-dc
       _report_server: reports
     limit: all
 
@@ -529,22 +529,12 @@ controller_workflows:
           - Deploy Windows GUI Blueprint
           - Deploy RHEL9 Blueprint
           - Deploy RHEL10 Blueprint
-          - Deploy Windows Core Blueprint
           - Deploy Report Server
       - identifier: Deploy Windows GUI Blueprint
         unified_job_template: Cloud | AWS | Create VM
         extra_data:
           create_vm_vm_name: aws-dc
           vm_blueprint: windows_full
-        success_nodes:
-          - Update Inventory
-        failure_nodes:
-          - Ticket - Instance Failed
-      - identifier: Deploy Windows Core Blueprint
-        unified_job_template: Cloud | AWS | Create VM
-        extra_data:
-          create_vm_vm_name: aws_win1
-          vm_blueprint: windows_core
         success_nodes:
           - Update Inventory
         failure_nodes:
@@ -626,12 +616,6 @@ controller_workflows:
           create_vm_vm_name: aws-dc
         success_nodes:
           - Update Inventory
-      - identifier: Delete Windows Core VM
-        unified_job_template: Cloud | AWS | Delete Stack VM
-        extra_data:
-          create_vm_vm_name: aws_win1
-        success_nodes:
-          - Update Inventory
       - identifier: Delete RHEL9 VM
         unified_job_template: Cloud | AWS | Delete Stack VM
         extra_data:
@@ -681,7 +665,7 @@ controller_workflows:
     notification_templates_error: Telemetry
     extra_vars:
       _hosts: aws-rhel9:aws-rhel10
-      _hosts_windows: aws-dc:aws_win1
+      _hosts_windows: aws-dc
       _report_server: reports
     survey_enabled: true
     survey:
@@ -709,11 +693,11 @@ controller_workflows:
         - question_name: Windows hosts
           question_description: >-
             Workload VMs to snapshot and patch on the Windows path.
-            Default is aws-dc:aws_win1 (both cloud-stack Windows hosts).
+            Default is aws-dc (the cloud-stack Windows host).
           type: text
           variable: _hosts_windows
           required: true
-          default: aws-dc:aws_win1
+          default: aws-dc
         - question_name: Report server
           question_description: >-
             Host that publishes the HTML compliance dashboard. Not patched.
